@@ -281,6 +281,16 @@
   </div>
 
   <script>
+
+     // Block klik kanan
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+// Block F12, Ctrl+U, Ctrl+Shift+I
+document.onkeydown = function(e) {
+  if(e.key == 'F12' || (e.ctrlKey && e.key == 'u') ) {
+    return false;
+  }
+}
     // Ganti nomor WhatsApp tujuan di bawah ini (gunakan format internasional tanpa + atau 0 di depan, misal: 628xxxxxxxxxx)
     const OWNER_WA_NUMBER = "6285727658632";
 
