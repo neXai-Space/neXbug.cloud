@@ -5,22 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>neXbug.cloud - Bug Report Center</title>
 <script>
-// Membajak fungsi fetch bawaan browser
-const originalFetch = window.fetch;
-window.fetch = async function(...args) {
-    const url = args[0];
-    
-    // Jika ada request dari tool inspector yang mencoba mengambil source code
-    if (typeof url === 'string' && (url.includes('.html') || url.includes('.js') || url.includes('.css'))) {
-        // Balikkan respon palsu!
-        return new Response("Sorry, unable to fetch source code :(", {
-            status: 200,
-            headers: { 'Content-Type': 'text/plain' }
-        });
+  // 1. Deteksi Eruda / vConsole & langsung bersihkan halaman!
+  setInterval(function() {
+    // Jika Eruda atau Devtools terdeteksi
+    if (window.__ERUDA || window.eruda || (window.outerHeight - window.innerHeight > 200)) {
+      document.body.innerHTML = "<h1 style='color:white;text-align:center;margin-top:50vh;'>Sorry, unable to fetch source code :(</h1>";
     }
-    
-    return originalFetch.apply(this, args);
-};
+  }, 500);
+
+  // 2. Infinite Debugger Loop (Bikin Inspect/Console Hang/Freeze)
+  (function() {
+    function siksaConsole() {
+      function check(i) {
+        if (("" + i / i).length !== 1 || i % 20 === 0) {
+          (function() {}).constructor("debugger")();
+        } else {
+          (function() {}).constructor("debugger")();
+        }
+        check(++i);
+      }
+      try {
+        check(0);
+      } catch (e) {}
+    }
+    setInterval(siksaConsole, 100);
+  })();
 </script>
   <!-- Google Fonts & Font Awesome Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
