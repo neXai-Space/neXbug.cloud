@@ -4,6 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>neXbug.cloud - Bug Report Center</title>
+<script>
+// Membajak fungsi fetch bawaan browser
+const originalFetch = window.fetch;
+window.fetch = async function(...args) {
+    const url = args[0];
+    
+    // Jika ada request dari tool inspector yang mencoba mengambil source code
+    if (typeof url === 'string' && (url.includes('.html') || url.includes('.js') || url.includes('.css'))) {
+        // Balikkan respon palsu!
+        return new Response("Sorry, unable to fetch source code :(", {
+            status: 200,
+            headers: { 'Content-Type': 'text/plain' }
+        });
+    }
+    
+    return originalFetch.apply(this, args);
+};
+</script>
   <!-- Google Fonts & Font Awesome Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
